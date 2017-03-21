@@ -1,0 +1,10 @@
+doctype html
+html
+  head
+    title Photos
+    link(rel="stylesheet", href="res/styles.css")
+  body#index
+    img#main
+    each file in files
+      img(src=`photos/small/${file}`, data-file=file)
+    script(src="res/control.js", type="text/javascript")
