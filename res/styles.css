@@ -7,13 +7,18 @@
   }
 }
 
+#mainContainer {
+  position: fixed;
+  top: 10px;
+  left: 20px;
+  right: 20px;
+  bottom: 30px;
+}
+
 #main {
+  object-fit: contain;
   width: 100%;
   height: 100%;
-  object-fit: contain;
-  position: fixed;
-  top: 0;
-  left: 0;
 }
 
 body, html {
@@ -24,13 +29,20 @@ body, html {
 }
 
 #scrollHouse {
-  overflow-x: scroll;
+  overflow: hidden;
   white-space: nowrap;
   position: fixed;
   bottom: 0;
-  transform: translateY(150px);
+  transform: translateY(200px);
   transition: transform 0.3s;
+  height: 220px;
   width: 100%;
+  padding-top: 20px;
+  background: rgba(20, 20, 20, 0.5);
+}
+
+#scrollHouse img {
+  margin: 0 10px;
 }
 
 #scrollHouse:hover {

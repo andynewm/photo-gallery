@@ -12,8 +12,8 @@ app.use('/photos', Express.static('photos'));
 app.use('/res', Express.static('res'));
 
 app.get('/', function(request, response) {
-  const dir = Path.join(__dirname, '..', 'photos', 'small');
-  console.log(dir);
+  const dir = Path.join(__dirname, '..', 'photos', 'thumbs');
+
   Fs.readdir(dir, (err, files) => {
     console.log(files);
     response.render('index', { files });

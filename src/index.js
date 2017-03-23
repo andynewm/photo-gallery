@@ -1,4 +1,7 @@
 import app from './app';
+import { resize } from './resizer';
+
+resize();
 
 var server = app.listen(3000, () => {
   var host = server.address().address;

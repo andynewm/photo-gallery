@@ -1,9 +1,27 @@
 const imageElements = [...document.querySelectorAll('img[data-file]')];
 
+const scrollHouse = document.getElementById('scrollHouse');
+let scrollSpeed = 0;
+
+scrollHouse.addEventListener('mouseleave', () => scrollSpeed = 0);
+
+scrollHouse.addEventListener('mousemove', function (event) {
+  const x = event.pageX;
+  const ratio = x / scrollHouse.offsetWidth;
+  scrollSpeed = (ratio - 0.5) * 20;
+});
+
+function scroll() {
+  scrollHouse.scrollLeft += scrollSpeed;
+  requestAnimationFrame(scroll);
+}
+
+requestAnimationFrame(scroll);
+
 const spinner = document.getElementById('spinner');
 
 const imagePaths= [...document.querySelectorAll('img[data-file]')]
-  .map(x => `photos/large/${x.getAttribute('data-file')}`);
+  .map(x => `photos/${x.getAttribute('data-file')}`);
 
 const mainImage = document.getElementById('main');
 

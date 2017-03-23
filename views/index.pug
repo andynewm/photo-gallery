@@ -4,9 +4,11 @@ html
     title Photos
     link(rel="stylesheet", href="res/styles.css")
   body#index
-    img#main
+    div#mainContainer
+      img#main
     div#scrollHouse
       each file in files
-        img(src=`photos/small/${file}`, data-file=file)
+        img(src=`photos/thumbs/${file}`, data-file=file)
+
     div#spinner
     script(src="res/control.js", type="text/javascript")
