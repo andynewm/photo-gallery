@@ -1,3 +1,12 @@
+@keyframes spinner {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
 #main {
   width: 100%;
   height: 100%;
@@ -11,4 +20,36 @@ body, html {
   padding: 0;
   margin: 0;
   height: 100%;
+  background: black;
+}
+
+#scrollHouse {
+  overflow-x: scroll;
+  white-space: nowrap;
+  position: fixed;
+  bottom: 0;
+  transform: translateY(150px);
+  transition: transform 0.3s;
+  width: 100%;
+}
+
+#scrollHouse:hover {
+  transform: translateY(0);
+}
+
+#spinner {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  height: 50px;
+  width: 50px;
+  margin-top: -25px;
+  margin-left: -25px;
+  border-radius: 50px;
+  border: solid white 5px;
+  border-top: solid transparent 5px;
+  animation-name: spinner;
+  animation-duration: 1s;
+  animation-iteration-count: infinite;
+  animation-timing-function: linear;
 }

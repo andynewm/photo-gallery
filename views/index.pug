@@ -5,6 +5,8 @@ html
     link(rel="stylesheet", href="res/styles.css")
   body#index
     img#main
-    each file in files
-      img(src=`photos/small/${file}`, data-file=file)
+    div#scrollHouse
+      each file in files
+        img(src=`photos/small/${file}`, data-file=file)
+    div#spinner
     script(src="res/control.js", type="text/javascript")
