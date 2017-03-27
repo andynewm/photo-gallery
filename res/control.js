@@ -3,13 +3,14 @@ const imageElements = [...document.querySelectorAll('img[data-file]')];
 const scrollHouse = document.getElementById('scrollHouse');
 let scrollSpeed = 0;
 
-scrollHouse.addEventListener('mouseleave', () => scrollSpeed = 0);
+document.querySelector('.directioner.left')
+  .addEventListener('mouseenter', () => scrollSpeed = -8);
 
-scrollHouse.addEventListener('mousemove', function (event) {
-  const x = event.pageX;
-  const ratio = x / scrollHouse.offsetWidth;
-  scrollSpeed = (ratio - 0.5) * 20;
-});
+document.querySelector('.directioner.right')
+  .addEventListener('mouseenter', () => scrollSpeed = 8);
+
+[...document.querySelectorAll('.directioner')]
+  .forEach(x => x.addEventListener('mouseleave', () => scrollSpeed = 0));
 
 function scroll() {
   scrollHouse.scrollLeft += scrollSpeed;

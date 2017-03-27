@@ -28,24 +28,27 @@ body, html {
   background: black;
 }
 
-#scrollHouse {
-  overflow: hidden;
-  white-space: nowrap;
+#bottomBar {
   position: fixed;
+  left: 0;
   bottom: 0;
   transform: translateY(200px);
   transition: transform 0.3s;
-  height: 220px;
   width: 100%;
-  padding-top: 20px;
   background: rgba(20, 20, 20, 0.5);
+}
+
+#scrollHouse {
+  height: 200px;
+  overflow: hidden;
+  white-space: nowrap;
 }
 
 #scrollHouse img {
   margin: 0 10px;
 }
 
-#scrollHouse:hover {
+#bottomBar:hover {
   transform: translateY(0);
 }
 
@@ -64,4 +67,53 @@ body, html {
   animation-duration: 1s;
   animation-iteration-count: infinite;
   animation-timing-function: linear;
+}
+
+.directioner {
+  position: fixed;
+  height: 100%;
+  width: 50px;
+  background-color: rgba(40, 40, 40, 0.5);
+  top: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.directioner svg {
+  width: 100%;
+}
+
+.directioner.left {
+  left: 0;
+}
+
+.directioner.right {
+  right: 0;
+}
+
+.arrow {
+  fill: none;
+  stroke: #fff;
+  stroke-width: 10;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.gallery-marker circle {
+  fill: #fff;
+}
+
+.gallery-marker {
+  height: 20px;
+  width: 100%;
+}
+
+h1 {
+  height: 20px;
+  line-height: 20px;
+  width: 100%;
+  text-align: center;
+  font-size: 18px;
+  color: #aaa;
 }

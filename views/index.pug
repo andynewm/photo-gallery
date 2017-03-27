@@ -3,12 +3,24 @@ html
   head
     title Photos
     link(rel="stylesheet", href="res/styles.css")
+    script(src="https://use.fontawesome.com/46cfbbad48.js")
   body#index
     div#mainContainer
-      img#main
-    div#scrollHouse
-      each file in files
-        img(src=`photos/thumbs/${file}`, data-file=file)
-
+      a(href=`photos/thumbs/${file}`, target="_blank")
+        img#main
+    div#bottomBar
+      svg(xmlns="http://www.w3.org/2000/svg", viewBox="0 0 100 100", class="gallery-marker")
+        circle(cx="25", cy="50", r="10")
+        circle(cx="50", cy="50", r="10")
+        circle(cx="75", cy="50", r="10")
+      div#scrollHouse
+        each file in files
+          img(src=`photos/thumbs/${file}`, data-file=file)
+      div.directioner.left
+        svg(xmlns="http://www.w3.org/2000/svg", viewBox="0 0 100 100")
+          path(d="M 70 10 L 30 50 L 70 90", class="arrow")
+      div.directioner.right
+        svg(xmlns="http://www.w3.org/2000/svg", viewBox="0 0 100 100")
+          path(d="M 30 10 L 70 50 L 30 90", class="arrow")
     div#spinner
     script(src="res/control.js", type="text/javascript")
