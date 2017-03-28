@@ -39,6 +39,7 @@ body, html {
 }
 
 #scrollHouse {
+  padding: 0 90px;
   height: 200px;
   overflow: hidden;
   white-space: nowrap;
@@ -72,32 +73,69 @@ body, html {
 .directioner {
   position: fixed;
   height: 100%;
-  width: 50px;
+  width: 0;
   background-color: rgba(40, 40, 40, 0.5);
   top: 0;
   display: flex;
   align-items: center;
   justify-content: center;
+  transition: width 0.3s;
+}
+
+#bottomBar:hover .directioner {
+  width: 70px;
 }
 
 .directioner svg {
-  width: 100%;
+  width: 40px;
 }
 
-.directioner.left {
+.arrow {
+  position: fixed;
+  top: 50%;
+  height: 100px;
+  width: 50px;
+  margin-top: -50px;
+  background: #222;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.arrow svg {
+  width: 50px;
+}
+
+.arrow.right {
+  border-top-left-radius: 50px;
+  border-bottom-left-radius: 50px;
+}
+
+.arrow.left {
+  border-top-right-radius: 50px;
+  border-bottom-right-radius: 50px;
+}
+
+.left {
   left: 0;
 }
 
-.directioner.right {
+.right {
   right: 0;
+}
+
+.directioner:hover .arrow {
+  stroke: #fff;
+  stroke-width: 13;
 }
 
 .arrow {
   fill: none;
-  stroke: #fff;
+  stroke: #aaa;
   stroke-width: 10;
   stroke-linecap: round;
   stroke-linejoin: round;
+  transition: stroke, stroke-width 0.3s;
 }
 
 .gallery-marker circle {

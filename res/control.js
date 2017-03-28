@@ -1,6 +1,7 @@
 const imageElements = [...document.querySelectorAll('img[data-file]')];
 
 const scrollHouse = document.getElementById('scrollHouse');
+const mainLink = document.getElementById('mainLink');
 let scrollSpeed = 0;
 
 document.querySelector('.directioner.left')
@@ -11,6 +12,16 @@ document.querySelector('.directioner.right')
 
 [...document.querySelectorAll('.directioner')]
   .forEach(x => x.addEventListener('mouseleave', () => scrollSpeed = 0));
+
+function showImage(index) {
+  if (index < 0 || index >= imageElements.length) {
+    return;
+  }
+  spinner.style.opacity = 1;
+  mainLink.href = imagePaths[index];
+  mainImage.src = imagePaths[index];
+  imageIndex = index;
+}
 
 function scroll() {
   scrollHouse.scrollLeft += scrollSpeed;
@@ -27,8 +38,7 @@ const imagePaths= [...document.querySelectorAll('img[data-file]')]
 const mainImage = document.getElementById('main');
 
 imageElements.forEach((x, i) => x.addEventListener('click', () => {
-  spinner.style.opacity = 1;
-  mainImage.setAttribute('src', imagePaths[i]);
+  showImage(i);
 }));
 
 let imageIndex = 0 ;
@@ -36,17 +46,15 @@ let imageIndex = 0 ;
 document.body.addEventListener('keydown', function (e) {
   switch(e.which) {
     case 37: //left
-      mainImage.setAttribute('src', imagePaths[--imageIndex]);
-      spinner.style.opacity = 1;
+      showImage(imageIndex - 1);
       e.preventDefault();
       break;
     case 39: //right
-      mainImage.setAttribute('src', imagePaths[++imageIndex]);
-      spinner.style.opacity = 1;
+      showImage(imageIndex + 1);
       e.preventDefault();
       break;
   }
 });
 
-mainImage.setAttribute('src', imagePaths[0]);
+showImage(0);
 mainImage.addEventListener('load', () => spinner.style.opacity = 0);
