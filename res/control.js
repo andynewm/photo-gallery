@@ -58,3 +58,20 @@ document.body.addEventListener('keydown', function (e) {
 
 showImage(0);
 mainImage.addEventListener('load', () => spinner.style.opacity = 0);
+
+(function () {
+
+  let touchX = 0;
+  mainImage.addEventListener('touchstart', e => touchX = e.touches[0].clientX);
+  mainImage.addEventListener('touchmove', e => mainImage.style.transform = `translate(${e.touches[0].clientX - touchX}px)`);
+  mainImage.addEventListener('touchend', e => {
+    mainImage.style.transform = '';
+    if (touchX > 10) {
+      showImage(imageIndex + 1);
+    }
+    if (touchX < -10) {
+      showImage(imageIndex - 1);
+    }
+  });
+})();
+mainImage.addEventListener('touchstart', (e) => console.log(e));

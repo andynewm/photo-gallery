@@ -32,7 +32,7 @@ body, html {
   position: fixed;
   left: 0;
   bottom: 0;
-  transform: translateY(200px);
+  transform: translateY(230px);
   transition: transform 0.3s;
   width: 100%;
   background: rgba(20, 20, 20, 0.5);
@@ -40,7 +40,7 @@ body, html {
 
 #scrollHouse {
   padding: 0 90px;
-  height: 200px;
+  height: 230px;
   overflow: scroll;
   white-space: nowrap;
 }
@@ -50,7 +50,7 @@ body, html {
 }
 
 #bottomBar:hover {
-  transform: translateY(0);
+  transform: translateY(30px);
 }
 
 #spinner {
