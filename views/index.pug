@@ -6,8 +6,10 @@ html
     script(src="https://use.fontawesome.com/46cfbbad48.js")
   body#index
     div#mainContainer
-      span#mainLink(target="_blank")
-        img#main
+      template#imageContainerTemplate
+        div.imageContainer
+          img.mainImage
+          div.spinner
     div#bottomBar
       svg(xmlns="http://www.w3.org/2000/svg", viewBox="0 0 100 50", class="gallery-marker")
         circle(cx="25", cy="25", r="8")

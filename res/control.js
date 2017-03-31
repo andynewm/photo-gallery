@@ -1,7 +1,17 @@
 const imageElements = [...document.querySelectorAll('img[data-file]')];
 
+function createImageFragment(index) {
+  const template = document.getElementById('imageContainerTemplate');
+  const clone = document.importNode(template.content, true);
+  const image = clone.querySelector('.mainImage');
+  const spinner = clone.querySelector('.spinner');
+
+  image.src = imagePaths[i];
+
+  return clone;
+}
+
 const scrollHouse = document.getElementById('scrollHouse');
-const mainLink = document.getElementById('mainLink');
 let scrollSpeed = 0;
 
 document.querySelector('.directioner.left')
@@ -18,8 +28,9 @@ function showImage(index) {
     return;
   }
   spinner.style.opacity = 1;
-  mainLink.href = imagePaths[index];
   mainImage.src = imagePaths[index];
+  afterImage.src = imagePaths[index + 1];
+  beforeImage.src = imagePaths[index - 1];
   imageIndex = index;
 }
 
@@ -35,7 +46,9 @@ const spinner = document.getElementById('spinner');
 const imagePaths= [...document.querySelectorAll('img[data-file]')]
   .map(x => `photos/${x.getAttribute('data-file')}`);
 
+const beforeImage = document.getElementById('before');
 const mainImage = document.getElementById('main');
+const afterImage = document.getElementById('after');
 
 imageElements.forEach((x, i) => x.addEventListener('click', () => {
   showImage(i);
@@ -60,18 +73,26 @@ showImage(0);
 mainImage.addEventListener('load', () => spinner.style.opacity = 0);
 
 (function () {
-
-  let touchX = 0;
-  mainImage.addEventListener('touchstart', e => touchX = e.touches[0].clientX);
-  mainImage.addEventListener('touchmove', e => mainImage.style.transform = `translate(${e.touches[0].clientX - touchX}px)`);
-  mainImage.addEventListener('touchend', e => {
+  const container = document.getElementById('mainContainer');
+  let touchStart = 0;
+  let lastTouch = 0;
+  container.addEventListener('touchstart', e => lastTouch = touchX = e.touches[0].clientX);
+  container.addEventListener('touchmove', e => {
+    lastTouch = e.touches[0].clientX;
+    beforeImage.style.transform = `translate(${lastTouch - touchX}px)`;
+    mainImage.style.transform = `translate(${lastTouch - touchX}px)`;
+    afterImage.style.transform = `translate(${lastTouch - touchX}px)`;
+  });
+  container.addEventListener('touchend', e => {
+    const delta = touchX - lastTouch;
+    beforeImage.style.transform = '';
     mainImage.style.transform = '';
-    if (touchX > 10) {
+    afterImage.style.transform = '';
+    if (delta > 10) {
       showImage(imageIndex + 1);
     }
-    if (touchX < -10) {
+    if (delta < -10) {
       showImage(imageIndex - 1);
     }
   });
 })();
-mainImage.addEventListener('touchstart', (e) => console.log(e));
