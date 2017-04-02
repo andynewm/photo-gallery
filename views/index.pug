@@ -5,10 +5,10 @@ html
     link(rel="stylesheet", href="res/styles.css")
     script(src="https://use.fontawesome.com/46cfbbad48.js")
   body#index
-    div#mainContainer
-      template#imageContainerTemplate
+    div#mainContainerfile
+      each file in files
         div.imageContainer
-          img.mainImage
+          img(src="data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw==", data-src=`photos/thumbs/${file}`, data-file=file)
           div.spinner
     div#bottomBar
       svg(xmlns="http://www.w3.org/2000/svg", viewBox="0 0 100 50", class="gallery-marker")
