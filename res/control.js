@@ -1,76 +1,85 @@
+let imageIndex = 0 ;
+
 const imageElements = [...document.querySelectorAll('img[data-file]')];
+const imageContainers = [...document.querySelectorAll('.imageContainer')];
 
-function createImageFragment(index) {
-  const template = document.getElementById('imageContainerTemplate');
-  const clone = document.importNode(template.content, true);
-  const image = clone.querySelector('.mainImage');
-  const spinner = clone.querySelector('.spinner');
-
-  image.src = imagePaths[i];
-
-  return clone;
-}
-
-const scrollHouse = document.getElementById('scrollHouse');
-let scrollSpeed = 0;
-
-document.querySelector('.directioner.left')
-  .addEventListener('mouseenter', () => scrollSpeed = -8);
-
-document.querySelector('.directioner.right')
-  .addEventListener('mouseenter', () => scrollSpeed = 8);
+document.querySelector('.marker')
+  .addEventListener('click', () => document.body.classList.toggle('previewing'));
 
 [...document.querySelectorAll('.directioner')]
   .forEach(x => x.addEventListener('mouseleave', () => scrollSpeed = 0));
 
-function showImage(index) {
-  if (index < 0 || index >= imageElements.length) {
-    return;
-  }
-  spinner.style.opacity = 1;
-  mainImage.src = imagePaths[index];
-  afterImage.src = imagePaths[index + 1];
-  beforeImage.src = imagePaths[index - 1];
+[...document.querySelectorAll('.directioner')]
+  .forEach(function (x) {
+    x.addEventListener('click', () => x.classList.add('spinning'));
+    x.addEventListener('transitionend', () => x.classList.remove('spinning'));
+  });
+
+document.querySelector('.directioner.left')
+  .addEventListener('click', function() {
+    selectImage(imageIndex - 1);
+  });
+
+document.querySelector('.directioner.right')
+  .addEventListener('click', function() {
+    selectImage(imageIndex + 1);
+  });
+
+imageContainers.forEach(function(container) {
+  const image = container.querySelector('img');
+  const spinner = container.querySelector('.spinner');
+
+  image.addEventListener('load', () => spinner.style.opacity = 0);
+});
+
+function selectImage(index) {
   imageIndex = index;
+
+  const container = imageContainers[index];
+  const image = container.querySelector('img');
+  const spinner = container.querySelector('.spinner');
+
+  slideImages(0);
+
+  imageContainers.forEach(function(container, index) {
+    const img = container.querySelector('img');
+    img.src = Math.abs(index - imageIndex) <= 1 ? img.getAttribute('data-src') : 'data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw==';
+  });
+
+  spinner.style.opacity = 1;
 }
 
-function scroll() {
-  scrollHouse.scrollLeft += scrollSpeed;
-  requestAnimationFrame(scroll);
-}
+selectImage(0);
 
-requestAnimationFrame(scroll);
+function slideImages(offset) {
+  imageContainers.forEach(function(container) {
+    container.style.transform = `translate(calc(-${imageIndex}00% + ${offset}px), 0)`;
+  });
+}
 
 const spinner = document.getElementById('spinner');
 
 const imagePaths= [...document.querySelectorAll('img[data-file]')]
   .map(x => `photos/${x.getAttribute('data-file')}`);
 
-const beforeImage = document.getElementById('before');
-const mainImage = document.getElementById('main');
-const afterImage = document.getElementById('after');
-
 imageElements.forEach((x, i) => x.addEventListener('click', () => {
-  showImage(i);
+  selectImage(i);
+  document.body.classList.remove('previewing')
 }));
-
-let imageIndex = 0 ;
 
 document.body.addEventListener('keydown', function (e) {
   switch(e.which) {
     case 37: //left
-      showImage(imageIndex - 1);
+      selectImage(imageIndex - 1);
       e.preventDefault();
       break;
     case 39: //right
-      showImage(imageIndex + 1);
+      selectImage(imageIndex + 1);
       e.preventDefault();
       break;
   }
 });
 
-showImage(0);
-mainImage.addEventListener('load', () => spinner.style.opacity = 0);
 
 (function () {
   const container = document.getElementById('mainContainer');
@@ -79,20 +88,19 @@ mainImage.addEventListener('load', () => spinner.style.opacity = 0);
   container.addEventListener('touchstart', e => lastTouch = touchX = e.touches[0].clientX);
   container.addEventListener('touchmove', e => {
     lastTouch = e.touches[0].clientX;
-    beforeImage.style.transform = `translate(${lastTouch - touchX}px)`;
-    mainImage.style.transform = `translate(${lastTouch - touchX}px)`;
-    afterImage.style.transform = `translate(${lastTouch - touchX}px)`;
+    slideImages(lastTouch - touchX);
   });
   container.addEventListener('touchend', e => {
     const delta = touchX - lastTouch;
-    beforeImage.style.transform = '';
-    mainImage.style.transform = '';
-    afterImage.style.transform = '';
+
     if (delta > 10) {
-      showImage(imageIndex + 1);
+      selectImage(imageIndex + 1);
     }
-    if (delta < -10) {
-      showImage(imageIndex - 1);
+    else if (delta < -10) {
+      selectImage(imageIndex - 1);
+    }
+    else {
+      slideImages(0);
     }
   });
 })();

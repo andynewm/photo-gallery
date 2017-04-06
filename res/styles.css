@@ -12,7 +12,7 @@
   top: 10px;
   left: 20px;
   right: 20px;
-  bottom: 35px;
+  bottom: 70px;
   overflow: hidden;
   white-space: nowrap;
 }
@@ -21,8 +21,14 @@
   object-fit: contain;
   width: 100%;
   height: 100%;
+}
+
+.imageContainer {
   position: relative;
-  left: -100%;
+  transition: transform 0.3s;
+  display: inline-block;
+  height: 100%;
+  width: 100%;
 }
 
 body, html {
@@ -32,43 +38,42 @@ body, html {
   background: black;
 }
 
-#bottomBar {
+.previewing #previewPane {
+  top: 0;
+}
+
+#previewPane {
+  box-sizing: border-box;
   position: fixed;
   left: 0;
-  bottom: 0;
-  /*transform: translateY(230px);*/
-  transition: transform 0.3s;
+  top: 100%;
+  height: 100%;
   width: 100%;
-  /*background: rgba(20, 20, 20, 0.5);*/
+  transition: top 0.3s;
   background: black;
+  padding: 20px;
+  overflow-y: scroll;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: flex-start;
+  align-content: flex-start;
 }
 
-/*#scrollHouse {
-  padding: 0 90px;
-  height: 230px;
-  overflow: scroll;
-  white-space: nowrap;
-}*/
-
-#scrollHouse {
-  padding: 90px 90px;
-  height: 700px;
-}
-
-#scrollHouse img {
+img.preview {
+  flex: 0 0 auto;
   width: 200px;
   height: 200px;
   margin: 10px;
+  border: 5px solid #111;
+}
+
+img.preview:hover {
   border: 5px solid #222;
-  object-fit: cover;
 }
 
-#bottomBar:hover {
-  transform: translateY(30px);
-}
-
-#spinner {
-  position: fixed;
+.spinner {
+  position: absolute;
   top: 50%;
   left: 50%;
   height: 50px;
@@ -84,53 +89,77 @@ body, html {
   animation-timing-function: linear;
 }
 
-.directioner {
-  position: fixed;
-  height: 100%;
-  width: 0;
-  background-color: rgba(40, 40, 40, 0.5);
-  top: 0;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  transition: width 0.3s;
-}
-
-#bottomBar:hover .directioner {
-  width: 70px;
-}
-
-.directioner svg {
+svg.directioner {
+  height: 40px;
   width: 40px;
+  position: fixed;
+  bottom: 0;
 }
 
-.left {
-  left: 0;
+svg.directioner.right {
+  right: 140px;
 }
 
-.right {
-  right: 0;
+svg.directioner.left {
+  right: 220px;
 }
 
-.directioner:hover .arrow {
+/*svg.directioner:hover .arrow {
   stroke: #fff;
   stroke-width: 13;
-}
+}*/
 
-.arrow {
+svg.directioner .arrow {
   fill: none;
   stroke: #aaa;
-  stroke-width: 10;
+  stroke-width: 12;
   stroke-linecap: round;
   stroke-linejoin: round;
-  transition: stroke, stroke-width 0.3s;
+  /*transition: stroke, stroke-width 0.3s;*/
+  transform-origin: 50% 50%;
 }
 
-.gallery-marker circle {
-  fill: #fff;
+svg.directioner.spinning.left .arrow:nth-child(1), svg.directioner.spinning.right .arrow:nth-child(2) {
+  transform: rotate(-180deg);
+  transition: transform 0.4s;
+}
+svg.directioner.spinning.left .arrow:nth-child(2), svg.directioner.spinning.right .arrow:nth-child(1) {
+  transform: rotate(180deg);
+  transition: transform 0.4s;
 }
 
-.gallery-marker {
-  height: 30px;
-  width: 100%;
+
+/**** MARKER ****/
+
+svg.marker {
+  height: 40px;
+  width: 40px;
+  position: fixed;
+  bottom: 0;
+  right: 40px;
+}
+svg.marker rect {
+  transition: all 0.4s;
+  transform-origin: 50% 50%;
+  fill: white;
+}
+
+.previewing svg.marker rect {
+  rx: 20;
+}
+
+.previewing svg.marker rect:nth-child(1) {
+  transform: rotate(-45deg) translate(0, 10px) scale(0.6, 1.5);
+}
+
+.previewing svg.marker rect:nth-child(2) {
+  transform: rotate(45deg) translate(0, 10px) scale(0.6, 1.5);
+}
+
+.previewing svg.marker rect:nth-child(3) {
+  transform: rotate(-45deg) translate(0, -10px) scale(0.6, 1.5);
+}
+
+.previewing svg.marker rect:nth-child(4) {
+  transform: rotate(45deg) translate(0, -10px) scale(0.6, 1.5);
 }
