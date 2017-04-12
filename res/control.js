@@ -3,6 +3,59 @@ let imageIndex = 0 ;
 const imageElements = [...document.querySelectorAll('img[data-file]')];
 const imageContainers = [...document.querySelectorAll('.imageContainer')];
 
+(function() {
+  let timer = null;
+  let locked = false;
+
+  const controlsElement = document.querySelector('.controls');
+
+  function hideControls() {
+    if (locked) {
+      return;
+    }
+
+    controlsElement.classList.remove('show');
+    timer = null;
+  }
+
+  function showControls() {
+    if (locked) {
+      return;
+    }
+
+    controlsElement.classList.add('show');
+
+    if (timer != null) {
+      clearTimeout(timer);
+    }
+
+    timer = setTimeout(hideControls, 1000);
+  }
+
+  function lockControls() {
+    controlsElement.classList.add('show');
+
+    if (timer != null) {
+      clearTimeout(timer);
+    }
+
+    locked = true;
+  }
+
+  function unlockControls() {
+    locked = false;
+
+    timer = setTimeout(hideControls, 1000);
+  }
+
+  showControls();
+
+  document.body.addEventListener('mousemove', showControls);
+  document.body.addEventListener('click', showControls);
+  controlsElement.addEventListener('mouseenter', lockControls);
+  controlsElement.addEventListener('mouseleave', unlockControls);
+})();
+
 document.querySelector('.marker')
   .addEventListener('click', () => document.body.classList.toggle('previewing'));
 
@@ -29,24 +82,49 @@ imageContainers.forEach(function(container) {
   const image = container.querySelector('img');
   const spinner = container.querySelector('.spinner');
 
-  image.addEventListener('load', () => spinner.style.opacity = 0);
+  image.addEventListener('load', () => {
+    if (!image.src.startsWith('data')) {
+      spinner.style.opacity = 0;
+    }
+  });
 });
 
+function switchImageSrcs() {
+  imageContainers.forEach(function(container, index) {
+    const img = container.querySelector('img');
+    const showImage = Math.abs(index - imageIndex) <= 1;
+    const newSrc = showImage
+      ? img.getAttribute('data-src')
+      : 'data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw==';
+
+    if (!showImage || (showImage && img.src.startsWith('data'))) {
+      container.querySelector('.spinner').opacity = 1;
+    }
+
+    img.src = newSrc;
+  });
+}
+
+imageContainers[0].addEventListener('transitionend', switchImageSrcs);
+
+switchImageSrcs();
+
 function selectImage(index) {
+  if (index < 0 || index >= imageContainers.length) {
+    slideImages(0);
+    return;
+  }
+
+  imageElements.forEach(function(preview, i) {
+    preview.classList.toggle('active', i == index);
+  });
+
   imageIndex = index;
 
   const container = imageContainers[index];
   const image = container.querySelector('img');
-  const spinner = container.querySelector('.spinner');
 
   slideImages(0);
-
-  imageContainers.forEach(function(container, index) {
-    const img = container.querySelector('img');
-    img.src = Math.abs(index - imageIndex) <= 1 ? img.getAttribute('data-src') : 'data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw==';
-  });
-
-  spinner.style.opacity = 1;
 }
 
 selectImage(0);
@@ -57,14 +135,16 @@ function slideImages(offset) {
   });
 }
 
-const spinner = document.getElementById('spinner');
-
 const imagePaths= [...document.querySelectorAll('img[data-file]')]
   .map(x => `photos/${x.getAttribute('data-file')}`);
 
 imageElements.forEach((x, i) => x.addEventListener('click', () => {
+  const container = document.getElementById('mainContainer')
+  container.classList.add('sticky');
   selectImage(i);
-  document.body.classList.remove('previewing')
+  setTimeout(() => container.classList.remove('sticky'), 100);
+  document.body.classList.remove('previewing');
+  switchImageSrcs();
 }));
 
 document.body.addEventListener('keydown', function (e) {
@@ -85,12 +165,16 @@ document.body.addEventListener('keydown', function (e) {
   const container = document.getElementById('mainContainer');
   let touchStart = 0;
   let lastTouch = 0;
-  container.addEventListener('touchstart', e => lastTouch = touchX = e.touches[0].clientX);
+  container.addEventListener('touchstart', e => {
+    lastTouch = touchX = e.touches[0].clientX;
+    container.classList.add('sticky');
+  });
   container.addEventListener('touchmove', e => {
     lastTouch = e.touches[0].clientX;
     slideImages(lastTouch - touchX);
   });
   container.addEventListener('touchend', e => {
+    container.classList.remove('sticky');
     const delta = touchX - lastTouch;
 
     if (delta > 10) {

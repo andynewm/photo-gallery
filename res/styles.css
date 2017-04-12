@@ -9,10 +9,10 @@
 
 #mainContainer {
   position: fixed;
-  top: 10px;
-  left: 20px;
-  right: 20px;
-  bottom: 70px;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
   overflow: hidden;
   white-space: nowrap;
 }
@@ -25,32 +25,41 @@
 
 .imageContainer {
   position: relative;
-  transition: transform 0.3s;
+  transition: transform 0.2s;
   display: inline-block;
   height: 100%;
   width: 100%;
+}
+
+#mainContainer.sticky .imageContainer {
+  transition: none;
 }
 
 body, html {
   padding: 0;
   margin: 0;
   height: 100%;
-  background: black;
+  background: #0d2b36;
 }
 
 .previewing #previewPane {
-  top: 0;
+  opacity: 1;
+  pointer-events: all;
 }
 
 #previewPane {
-  box-sizing: border-box;
+  pointer-events: none;
+  opacity: 0;
   position: fixed;
   left: 0;
-  top: 100%;
-  height: 100%;
-  width: 100%;
-  transition: top 0.3s;
-  background: black;
+  top: 0;
+  bottom: 0;
+  right: 0;
+  transition: opacity 0.3s;
+  background: #0d2b36;
+}
+
+#previewContainer {
   padding: 20px;
   overflow-y: scroll;
   display: flex;
@@ -58,6 +67,11 @@ body, html {
   justify-content: center;
   align-items: flex-start;
   align-content: flex-start;
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  right: 10px;
+  bottom: 70px;
 }
 
 img.preview {
@@ -68,8 +82,20 @@ img.preview {
   border: 5px solid #111;
 }
 
+@media only screen and (max-device-width: 600px) {
+  img.preview {
+    width: 100px;
+    height: 100px;
+    margin: 5px;
+  }
+}
+
 img.preview:hover {
   border: 5px solid #222;
+}
+
+img.preview.active {
+  border: 5px solid red;
 }
 
 .spinner {
@@ -90,24 +116,11 @@ img.preview:hover {
 }
 
 svg.directioner {
-  height: 40px;
-  width: 40px;
-  position: fixed;
-  bottom: 0;
+  height: 30px;
+  width: 30px;
+  transform-origin: 50% 50%;
+  transition: transform 0.1s;
 }
-
-svg.directioner.right {
-  right: 140px;
-}
-
-svg.directioner.left {
-  right: 220px;
-}
-
-/*svg.directioner:hover .arrow {
-  stroke: #fff;
-  stroke-width: 13;
-}*/
 
 svg.directioner .arrow {
   fill: none;
@@ -115,28 +128,25 @@ svg.directioner .arrow {
   stroke-width: 12;
   stroke-linecap: round;
   stroke-linejoin: round;
-  /*transition: stroke, stroke-width 0.3s;*/
-  transform-origin: 50% 50%;
+  transition: stroke, stroke-width 0.3s;
 }
 
-svg.directioner.spinning.left .arrow:nth-child(1), svg.directioner.spinning.right .arrow:nth-child(2) {
-  transform: rotate(-180deg);
-  transition: transform 0.4s;
-}
-svg.directioner.spinning.left .arrow:nth-child(2), svg.directioner.spinning.right .arrow:nth-child(1) {
-  transform: rotate(180deg);
-  transition: transform 0.4s;
+svg.directioner:hover .arrow {
+  stroke: #fff;
+  stroke-width: 13;
 }
 
+svg.directioner.spinning {
+  transform: scale(1, 0.85);
+}
 
-/**** MARKER ****/
+.previewing svg.directioner {
+  opacity: 0;
+}
 
 svg.marker {
-  height: 40px;
-  width: 40px;
-  position: fixed;
-  bottom: 0;
-  right: 40px;
+  height: 30px;
+  width: 30px;
 }
 svg.marker rect {
   transition: all 0.4s;
@@ -146,6 +156,10 @@ svg.marker rect {
 
 .previewing svg.marker rect {
   rx: 20;
+}
+
+:not(.previewing) svg.marker:hover rect {
+  transform: scale(1.1);
 }
 
 .previewing svg.marker rect:nth-child(1) {
@@ -163,3 +177,25 @@ svg.marker rect {
 .previewing svg.marker rect:nth-child(4) {
   transform: rotate(45deg) translate(0, -10px) scale(0.6, 1.5);
 }
+
+div.controls {
+  position: fixed;
+  left: 50%;
+  bottom: 0;
+  height: 55px;
+  width: 150px;
+  margin-left: -75px;
+  background: linear-gradient(to bottom, rgba(13,43,54,0.5) 0%,rgba(13,43,54,0.5) 85%,rgba(13,43,54,1) 100%);
+  opacity: 0;
+  transition: opacity 0.3s;
+  border-top-left-radius: 10px;
+  border-top-right-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+}
+
+.previewing div.controls, div.controls.show {
+  opacity: 1;
+}
+

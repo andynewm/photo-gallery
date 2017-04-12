@@ -11,18 +11,20 @@ html
         div.imageContainer
           img(src="data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw==", data-src=`photos/${file}`)
           div.spinner
-    svg.directioner.left(xmlns="http://www.w3.org/2000/svg", viewBox="0 0 100 100")
-      path(d="M 70 20 L 30 50", class="arrow")
-      path(d="M 30 50 L 70 80", class="arrow")
-    svg.directioner.right(xmlns="http://www.w3.org/2000/svg", viewBox="0 0 100 100")
-      path(d="M 30 20 L 70 50", class="arrow")
-      path(d="M 70 50 L 30 80", class="arrow")
     div#previewPane
-      each file in files
-        img.preview(src=`photos/thumbs/${file}`, data-file=file)
-    svg.marker(xmlns="http://www.w3.org/2000/svg", viewBox="0 0 100 100")
-      rect(x="10", y="10", width="35", height="35", rx="5", ry="5")
-      rect(x="55", y="10", width="35", height="35", rx="5", ry="5")
-      rect(x="55", y="54", width="35", height="35", rx="5", ry="5")
-      rect(x="10", y="55", width="35", height="35", rx="5", ry="5")
+      div#previewContainer
+        each file in files
+          img.preview(src=`photos/thumbs/${file}`, data-file=file)
+    div.controls
+      svg.directioner.left(xmlns="http://www.w3.org/2000/svg", viewBox="0 0 100 100")
+        path(d="M 70 20 L 30 50", class="arrow")
+        path(d="M 30 50 L 70 80", class="arrow")
+      svg.marker(xmlns="http://www.w3.org/2000/svg", viewBox="0 0 100 100")
+        rect(x="15", y="15", width="30", height="30", rx="5", ry="5")
+        rect(x="55", y="15", width="30", height="30", rx="5", ry="5")
+        rect(x="55", y="55", width="30", height="30", rx="5", ry="5")
+        rect(x="15", y="55", width="30", height="30", rx="5", ry="5")
+      svg.directioner.right(xmlns="http://www.w3.org/2000/svg", viewBox="0 0 100 100")
+        path(d="M 30 20 L 70 50", class="arrow")
+        path(d="M 70 50 L 30 80", class="arrow")
     script(src="res/control.js", type="text/javascript")
