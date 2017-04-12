@@ -4,22 +4,26 @@ import Path from 'path';
 
 export async function resize() {
   const dir = Path.join(__dirname, '..', 'photos');
-  const thumbsDir = Path.join(__dirname, '..', 'photos', 'thumbs');
-  const mainDir = Path.join(__dirname, '..', 'photos', 'main');
   const files = await getFiles();
 
-  files.forEach(function (file) {
+  files.filter(file => /\.jpg$/.test(file)).forEach(function (file) {
     const pp = Path.join(dir, file);
 
     Sharp(pp)
       .resize(200, 200)
       .crop(Sharp.strategy.center)
-      .toFile(Path.join(thumbsDir, file));
+      .jpeg({ quality: 95 })
+      .toFile(Path.join(dir, 'thumbs', file));
 
     Sharp(pp)
       .resize(2000, 2000)
       .max()
-      .toFile(Path.join(mainDir, file));
+      .jpeg({ quality: 95 })
+      .toFile(Path.join(dir, 'main', file));
+
+    Sharp(pp)
+      .jpeg({ quality: 95 })
+      .toFile(Path.join(dir, 'full', file));
   });
 }
 
