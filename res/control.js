@@ -1,7 +1,11 @@
-let imageIndex = 0 ;
+let imageIndex = 0;
 
-const imageElements = [...document.querySelectorAll('img[data-file]')];
-const imageContainers = [...document.querySelectorAll('.imageContainer')];
+const previewImages = [...document.querySelectorAll('img[data-file]')];
+const imageContainers = [...document.querySelectorAll('.imageContainer')].map(container => ({
+  container,
+  image: container.querySelector('img'),
+  spinner: container.querySelector('.spinner')
+}));
 
 (function() {
   let timer = null;
@@ -60,9 +64,6 @@ document.querySelector('.marker')
   .addEventListener('click', () => document.body.classList.toggle('previewing'));
 
 [...document.querySelectorAll('.directioner')]
-  .forEach(x => x.addEventListener('mouseleave', () => scrollSpeed = 0));
-
-[...document.querySelectorAll('.directioner')]
   .forEach(function (x) {
     x.addEventListener('click', () => x.classList.add('spinning'));
     x.addEventListener('transitionend', () => x.classList.remove('spinning'));
@@ -78,10 +79,7 @@ document.querySelector('.directioner.right')
     selectImage(imageIndex + 1);
   });
 
-imageContainers.forEach(function(container) {
-  const image = container.querySelector('img');
-  const spinner = container.querySelector('.spinner');
-
+imageContainers.forEach(function({ image, spinner }) {
   image.addEventListener('load', () => {
     if (!image.src.startsWith('data')) {
       spinner.style.opacity = 0;
@@ -90,22 +88,21 @@ imageContainers.forEach(function(container) {
 });
 
 function switchImageSrcs() {
-  imageContainers.forEach(function(container, index) {
-    const img = container.querySelector('img');
+  imageContainers.forEach(function({ spinner, image }, index) {
     const showImage = Math.abs(index - imageIndex) <= 1;
     const newSrc = showImage
-      ? img.getAttribute('data-src')
+      ? image.getAttribute('data-src')
       : 'data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw==';
 
-    if (!showImage || (showImage && img.src.startsWith('data'))) {
-      container.querySelector('.spinner').opacity = 1;
+    if (!showImage || (showImage && image.src.startsWith('data'))) {
+      spinner.opacity = 1;
     }
 
-    img.src = newSrc;
+    image.src = newSrc;
   });
 }
 
-imageContainers[0].addEventListener('transitionend', switchImageSrcs);
+imageContainers[0].container.addEventListener('transitionend', switchImageSrcs);
 
 switchImageSrcs();
 
@@ -115,14 +112,11 @@ function selectImage(index) {
     return;
   }
 
-  imageElements.forEach(function(preview, i) {
+  previewImages.forEach(function(preview, i) {
     preview.classList.toggle('active', i == index);
   });
 
   imageIndex = index;
-
-  const container = imageContainers[index];
-  const image = container.querySelector('img');
 
   slideImages(0);
 }
@@ -130,15 +124,12 @@ function selectImage(index) {
 selectImage(0);
 
 function slideImages(offset) {
-  imageContainers.forEach(function(container) {
+  imageContainers.forEach(function({ container }) {
     container.style.transform = `translate(calc(-${imageIndex}00% + ${offset}px), 0)`;
   });
 }
 
-const imagePaths= [...document.querySelectorAll('img[data-file]')]
-  .map(x => `photos/${x.getAttribute('data-file')}`);
-
-imageElements.forEach((x, i) => x.addEventListener('click', () => {
+previewImages.forEach((x, i) => x.addEventListener('click', () => {
   const container = document.getElementById('mainContainer')
   container.classList.add('sticky');
   selectImage(i);
@@ -165,22 +156,25 @@ document.body.addEventListener('keydown', function (e) {
   const container = document.getElementById('mainContainer');
   let touchStart = 0;
   let lastTouch = 0;
+
   container.addEventListener('touchstart', e => {
     lastTouch = touchX = e.touches[0].clientX;
     container.classList.add('sticky');
   });
+
   container.addEventListener('touchmove', e => {
     lastTouch = e.touches[0].clientX;
     slideImages(lastTouch - touchX);
   });
+
   container.addEventListener('touchend', e => {
     container.classList.remove('sticky');
     const delta = touchX - lastTouch;
 
-    if (delta > 10) {
+    if (delta > 20) {
       selectImage(imageIndex + 1);
     }
-    else if (delta < -10) {
+    else if (delta < -20) {
       selectImage(imageIndex - 1);
     }
     else {
